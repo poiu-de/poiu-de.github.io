@@ -1,0 +1,98 @@
+baseURL = "https://poiu-de.github.io/"
+title = "poiu – Java Libraries"
+enableRobotsTXT = true
+# this example loads the theme as hugo module
+# comment out line below, and uncomment the line after it if you prefer to load the theme normally
+#theme = ["github.com/onweru/compose"] # edit this if you'ld rather use a fork of this repo
+theme = "compose"
+enableGitInfo = true
+
+disableKinds = ["taxonomy"]
+
+[outputs]
+  home = ["HTML", "RSS","JSON"]
+
+[[menu.main]]
+  name = "Apron"
+  weight = 2
+  pageRef = "apron/"
+  [[menu.main.params]]
+    iconLight = "/images/apron-wide.svg"
+    iconDark  = "/images/apron-wide-dark.svg"
+[[menu.main]]
+  name = "Kilt"
+  weight = 3
+  pageRef = "kilt/"
+  [[menu.main.params]]
+    iconLight = "/images/kilt-wide.svg"
+    iconDark  = "/images/kilt-wide-dark.svg"
+[[menu.main]]
+  name = "Coat"
+  weight = 4
+  pageRef = "coat/"
+  [[menu.main.params]]
+    iconLight = "/images/coat-wide.svg"
+    iconDark  = "/images/coat-wide-dark.svg"
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+    [markup.goldmark.extensions]
+      typographer = false
+  [markup.highlight]
+    codeFences = true
+    guessSyntax = false
+    hl_Lines = ""
+    lineNoStart = 1
+    lineNos = true
+    lineNumbersInTable = false
+    noClasses = false
+    style = "monokai"
+    tabWidth = 2
+  [markup.tableOfContents]
+    endLevel = 4
+    ordered = false
+    startLevel = 2
+
+# Everything below this are Site Params
+
+[params]
+  last_stable_apron_version = "2.1.1"
+  last_stable_kilt_version  = "1.0.2"
+  last_stable_coat_version  = "1.0.0"
+  apron_repo_url = "https://github.com/poiu-de/apron"
+  kilt_repo_url  = "https://github.com/poiu-de/kilt"
+  coat_repo_url  = "https://github.com/poiu-de/coat"
+
+  docSections = ["apron", "kilt", "coat"]
+  uniqueHomePage = true # change to false to add sidebar to homepage
+  repo = "https://github.com/poiu-de/compose"
+
+  time_format_blog = "Monday, January 02, 2006"
+  time_format_default = "January 2, 2006"
+  enableDarkMode = true # set to false to disable darkmode by default # user will still have the option to use dark mode
+
+  # sets the maximum number of lines per codeblock. The codeblock will however be scrollable and expandable.
+  codeMaxLines = 25
+
+  # disable showing line numbers by default. Switch to `true` if you'd rather have them on.
+  codeLineNumbers = false
+
+  # Site logo
+  [params.logo]
+    lightMode = "images/poiu-big.svg"
+    darkMode = "images/poiu-big.svg"
+
+  #[params.source]
+  #  name = "GitHub"
+  #  iconLight = "images/GitHubMarkLight.svg"
+  #  iconDark = "images/GitHubMarkDark.svg"
+  #  url = "https://github.com/poiu-de/"
+
+  # optional
+  # attribution. Feel free to delete this
+  [params.author]
+    name = "poiu.de"
+    url = "https://github.com/poiu-de"
+
