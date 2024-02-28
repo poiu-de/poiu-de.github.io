@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<svg
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   version="1.0"
+   viewBox="0 0 50 50"
+   id="svgroot">
+
+<defs>
+  <filter id="shadow">
+    <feDropShadow dx="0.6" dy="0.6" stdDeviation="0.5" flood-opacity="0.5"/>
+  </filter>
+
+  <filter id="darken">
+    <feComponentTransfer>
+      <feFuncR type="linear" slope="0.5" />
+      <feFuncG type="linear" slope="0.5" />
+      <feFuncB type="linear" slope="0.5" />
+    </feComponentTransfer>
+  </filter>
+</defs>
+
+<g id="coat" filter="url(#shadow)" >
+
+  <path id="arm-right"
+        d="M 7,2
+           l -2,23
+           l 8,0
+           l 2,-23
+           z
+          "
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke="#a1462d"
+        fill="#e4e7cb"
+        />
+
+  <path id="arm-left"
+        d="M 43,2
+           l 2,23
+           l -8,0
+           l -2,-23
+           z
+          "
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke="#a1462d"
+        fill="#e4e7cb"
+        />
+
+  <path id="main-part"
+        d="M 15,2
+           l -3,46
+           l 26,0
+           l -3,-46
+           z
+          "
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke="#a1462d"
+        fill="#e4e7cb"
+        />
+
+  <path id="button-border"
+        d="M 25,15
+           l 0,33
+          "
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke="#a1462d"
+        fill="none"
+        />
+
+  <path id="lapel"
+        d="M 25,2
+           l -5,4
+           l 5,8
+           l 5,-8
+           l -5,-4
+           z
+          "
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke="#a1462d"
+        fill="#e4e7cb"
+        />
+</g>
+
+</svg>
+
