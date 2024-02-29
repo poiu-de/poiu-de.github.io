@@ -41,7 +41,7 @@ concrete implementation of the interface in the same package and (by
 default) the same name with <code>Immutable</code> prepended to it. Therefore the
 above example interface would produce a <code>com.example.ImmutableAppConfig</code>
 class.</p><h3 id=use-the-generated-config-class>Use the generated config class</h3><p>The generated config class can be instantiated from a number of different sources.
-Since version 0.1.0 Coat also allows instantiation from multiple sources at the same time.</p><h4 id=config-sources>Config Sources</h4><p>The main source of config entries for Coat are <code>java.util.Map&lt;String, String></code>s. For common config sources some shortcut methods exist that provide
+Since version 1.0.0 Coat also allows instantiation from multiple sources at the same time.</p><h4 id=config-sources>Config Sources</h4><p>The main source of config entries for Coat are <code>java.util.Map&lt;String, String></code>s. For common config sources some shortcut methods exist that provide
 direct support, but in all other cases everything that can be represented as
 a map of String keys to String values can be used as a config source.</p><dl><dt>java.util.Map&lt;String, String></dt><dd><p>A map with key-value mappings can directly be given to Coat to instantiate
 a Config class with these entries.</p></dd><dt>java.io.File</dt><dd><p>The traditional approach of specifying config entries in Java is via
