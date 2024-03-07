@@ -60,7 +60,7 @@ disableKinds = ["taxonomy"]
 [params]
   last_stable_apron_version = "2.1.1"
   last_stable_kilt_version  = "1.0.2"
-  last_stable_coat_version  = "1.0.0"
+  last_stable_coat_version  = "1.0.1"
   apron_repo_url = "https://github.com/poiu-de/apron"
   kilt_repo_url  = "https://github.com/poiu-de/kilt"
   coat_repo_url  = "https://github.com/poiu-de/coat"
