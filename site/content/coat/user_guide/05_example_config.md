@@ -7,7 +7,7 @@ weight: 5
 
 The annotation processor generates an example config file (conforming to the
 specification of Java `.properties` files) for each annotated interface.
-That example contains an entry for each accessor method. 
+That example contains an entry for each accessor method.
 
 If an accessor method is optional, the entry in the example will be
 commented out.
@@ -36,7 +36,7 @@ with the `maven-assembly-plugin`.
 
 ### Generation at runtime
 
-The generated config class provides a method
+The generated builder class provides a static method
 `writeExampleConfig(java.io.Writer)` that allows generating the very same
 example config at runtime. This is helpful in cases when the example config
 should only be generated on a users demand.

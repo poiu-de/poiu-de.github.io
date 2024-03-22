@@ -3,12 +3,13 @@ title: "Quick Start"
 weight: 1
 ---
 
-Starting with Coat is easy. 
+Starting with Coat is easy.
 Just write an interface with accessor methods for each field that should be
 configurable. The return values of the accessor methods can be of any type.
-Many types are already 
+Many types are already
 [supported out of the box]({{< ref "/coat/user_guide/04_supported_types.md" >}}),
-but it is possible to use [custom types]({{< ref "/coat/user_guide/04_supported_types#registering-custom-types" >}}).
+but it is possible to use
+[custom types]({{< ref "/coat/user_guide/04_supported_types#registering-custom-types" >}}).
 
 The source of the configuration data doesn’t matter. While it is
 mainly intended to be used for the usual Java `.properties` files, it can

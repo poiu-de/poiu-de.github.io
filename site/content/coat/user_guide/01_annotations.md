@@ -16,25 +16,22 @@ The type-level annotation is mandatory. It is the indicator for the annotation p
 Each interface that should be processed by the annotation processor must be
 annotated with `@Coat.Config`.
 
-The generated class will always be generated in the same package as the
+The generated builder class will always be generated in the same package as the
 annotated interface.
 
-The name of the generated class is by the default the interface name with
-`Immutable` prepended to it. One exception is if the interface name starts with
-an underscore. In that case the generated class name is the same as the
-interface, but with the leading underscore removed. Therefore for the interface
-`_MyConfig` the generated class would be `MyConfig`.
+The name of the generated builder class is by default the interface name with
+`Builder` appended to it.
 
-`@Coat.Config` [(Javadoc)](https://javadoc.io/doc/de.poiu.coat/coat-processor/latest/de/poiu/coat/annotation/Coat.Config.html) supports the following attributes:
+`@Coat.Config` [(Javadoc)](https://javadoc.io/doc/de.poiu.coat/coat-runtime/latest/de/poiu/coat/annotation/Coat.Config.html) supports the following attributes:
 
 #### *className*
-The `className` can be specified to generate a class with a different name than
-when applying the above mentioned naming rules. When `className` is specified
-it will be used as the generated class name. It will still be generated in the
-same package as the annotated interface.
+The `className` can be specified to generate a builder class with a different
+name than when applying the above mentioned naming rules. When `className` is
+specified it will be used as the generated builder class name. It will still be
+generated in the same package as the annotated interface.
 
 ```java
-@Coat.Config(className = "MyAppConfig")
+@Coat.Config(className = "MyConfigBuilder")
 public interface AppConfig {
   …
 }
@@ -64,10 +61,9 @@ public interface AppConfig {
 
 #### *stripGetPrefix*
 
-Coat is agnostic to the naming conventions of the accessor methods. Using the Java Bean Convention of prefixing the methods with “get” leads to strange config keys (that also include the “get” prefix). Therefore Coat strips these prefixes before inferring the key. So the accessor method “getListenPort” would be specified as “listenPort” in the config file,
+Coat is agnostic to the naming conventions of the accessor methods. Using the Java Bean Convention of prefixing the methods with “get” leads to strange config keys (that also include the “get” prefix). Therefore Coat strips these prefixes before inferring the key. So the accessor method “getListenPort” would be specified as “listenPort” in the config file, This is necessary when using [Java Bean Validation]({{< ref "/coat/user_guide/03_validation#java-bean-validation" >}}) as that specification requires the “get” prefix on all accessors that are about to be validated.
 
 If the “get” prefix should not be stripped for some reason, the `stripGetPrefix` can be set to false to prohibit that behavior.
-This is necessary when using [Java Bean Validation]({{< ref "/coat/user_guide/03_validation#java-bean-validation" >}}).
 
 ```java
 @Coat.Confg(stripGetPrefix = false)
@@ -79,7 +75,7 @@ public interface AppConfig {
 
 #### *converters* {#coat-config-converters}
 
-Coat supports registering [custom converters]({{< ref "/coat/user_guide/04_supported_types.md#registering-custom-types" >}}) via a static method on the `CoatConfig` class.
+Coat supports registering [custom converters]({{< ref "/coat/user_guide/04_supported_types.md#registering-custom-types" >}}) via a static method on the `Coat` class.
 
 Converters can also be registered declaratively with the `converters` attribute. It expects an array of Converter classes to register.
 
@@ -114,7 +110,7 @@ public interface AppConfig {
 
 Since version 0.0.4 the `@Coat.Param` annotation on accessor methods is optional.
 
-`@Coat.Param` [(Javadoc)](https://javadoc.io/doc/de.poiu.coat/coat-processor/latest/de/poiu/coat/annotation/Coat.Param.html) supports the following attributes:
+`@Coat.Param` [(Javadoc)](https://javadoc.io/doc/de.poiu.coat/coat-runtime/latest/de/poiu/coat/annotation/Coat.Param.html) supports the following attributes:
 
 #### *key* {#coat-param-key}
 
@@ -176,7 +172,7 @@ corresponding accessor method.
 When using `@Coat.Embedded` the return type of the accessor method _must_
 be a `@Coat.Config` annotated interface.
 
-`@Coat.Embedded` [(Javadoc)](https://javadoc.io/doc/de.poiu.coat/coat-processor/latest/de/poiu/coat/annotation/Coat.Embedded.html) supports the following attributes:
+`@Coat.Embedded` [(Javadoc)](https://javadoc.io/doc/de.poiu.coat/coat-runtime/latest/de/poiu/coat/annotation/Coat.Embedded.html) supports the following attributes:
 
 #### *key*
 

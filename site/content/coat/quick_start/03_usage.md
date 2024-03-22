@@ -13,10 +13,11 @@ but custom types can be
 [registered]({{< ref "/coat/user_guide/04_supported_types#registering-custom-types" >}})
 to support additional types.
 
-Config values that are _optional_, must be of type `java.util.Optional` or
-the more specialized variants `OptionalInt`, `OptionalLong` or
-`OptionalDouble`. All other config values are considered _mandatory_.
-Missing mandatory values will throw exceptions at runtime.
+Config values that are _optional_, must be of type `java.util.Optional` or the
+more specialized variants `OptionalInt`, `OptionalLong` or `OptionalDouble`.
+All other config values are considered _mandatory_. Missing mandatory values
+will fail validation on construction time and therefore raise an exception
+(with details about the validation failures).
 
 The interface _must_ be annotated with the `@Coat.Config` annotation for
 the annotation processor to recognize it.
@@ -50,23 +51,23 @@ public interface AppConfig {
 }
 ```
 
-### Generate concrete config class
+### Generate the builder for the config class
 
-When compiling the project the annotation processor will produce a
-concrete implementation of the interface in the same package and (by
-default) the same name with `Immutable` prepended to it. Therefore the
-above example interface would produce a `com.example.ImmutableAppConfig`
-class.
+When compiling the project the annotation processor will produce a builder to
+build a concrete implementation of the interface in the same package and (by
+default) the same name with `Builder` appended to it. Therefore the above
+example interface would produce an `com.example.AppConfigBuilder` class.
 
-### Use the generated config class
+### Use the generated builder
 
-The generated config class can be instantiated from a number of different sources.
-Since version 1.0.0 Coat also allows instantiation from multiple sources at the same time.
+The generated builder can be instantiated with a number of different config
+sources. Since version 1.0.0 Coat also allows instantiation from multiple
+sources at the same time.
 
 #### Config Sources
 
-The main source of config entries for Coat are `java.util.Map<String,
-String>`s. For common config sources some shortcut methods exist that provide
+The main source of config entries for Coat are `java.util.Map<String, String>`s.
+For common config sources some shortcut methods exist that provide
 direct support, but in all other cases everything that can be represented as
 a map of String keys to String values can be used as a config source.
 
@@ -119,14 +120,13 @@ Static factory methods are provided for reading config values from a single conf
 Example:
 
 ```java
-final MyConfig config= ImmutableMyConfig.from(System.getProperties());
+final MyConfig config= MyConfigBuilder.from(System.getProperties());
 ```
 
-#### Instantiation via builder
+#### Instantiation with multiple config sources
 
-A builder is provided to create config objects and define the config sources.
-While it is possible to use the builder for a single config source, it is the
-only way to read multiple config sources.
+The generated builder allows for using multiple config sources by using
+different `add` methods.
 
 The order in which the config sources are read is defined by the order in which
 they are added to the builder. Later config sources overwrite values with the
@@ -136,7 +136,7 @@ For example for reading the basic config from a config file, but allow
 overriding some entries via environment variables:
 
 ```java
-final MyConfig config= ImmutableMyConfig.builder()
+final MyConfig config= MyConfigBuilder.create()
   .add(new File("myConfig.properties"))
   .addEnvVars()
   .build();
@@ -144,31 +144,31 @@ final MyConfig config= ImmutableMyConfig.builder()
 
 #### Validation of config objets
 
-The instantiated config object can be
-[validated]({{< ref "/coat/user_guide/03_validation.md" >}})
-to fail early in case mandatory config values are missing or existing
-values cannot be converted to the expected type.
+Since version 2.0.0 config objects are always validated at construction time.
+Therefore all the static factory methods as well as the `#build()` method of
+the generated Builder throw a `ConfigValidationException` in case this validation
+fails.
+See [Validation]({{< ref "/coat/user_guide/03_validation.md" >}}) for a more
+detailled description of the validation process.
 
 ```java
 public class MyApp {
   public static void main(String[] args) {
-    final ImmutableAppConfig config= ImmutableAppConfig.from(
-      new File("/path/to/config.properties"));
-
     try {
-      config.validate();
+      final AppConfigBuilder config= AppConfigBuilder.from(
+        new File("/path/to/config.properties"));
+
+      System.out.println("Starting " + config.appName());
+      config.description().ifPresent(System.out::println);
+
+      final Socket s= new Socket(config.remoteIP(), config.remotePort());
+
+      …
     } catch (final ConfigValidationException ex) {
       System.err.println("Error in config file:\n"
                          + ex.getValidationResult().toString());
       System.exit(1);
     }
-
-    System.out.println("Starting " + config.appName());
-    config.description().ifPresent(System.out::println);
-
-    final Socket s= new Socket(config.remoteIP(), config.remotePort());
-
-    …
   }
 }
 ```

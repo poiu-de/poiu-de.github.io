@@ -60,7 +60,7 @@ public interface MyConfig {
 3. Then use the generated class
 ```java
 final MyConfig config=
-  ImmutableMyConfig.from(
+  MyConfigBuilder.from(
     new File("/path/to/config.properties"));
 
 final String appName    = config.appName();
@@ -74,73 +74,6 @@ config.description().ifPresent(
 {{< /column >}}
 {{< /block >}}
 
-
-<!--
-
-## More sophisticated usage
-
-
-
-{{< block "grid-3" >}}
-{{< column >}}
-1. For the following `config.properties` file
-```
-appName     = My shiny app
-listenPort  = 5040
-description = Only a test project
-
-
-
-
-
-
-
-
-```
-{{< /column >}}
-
-{{< column >}}
-
-2. Define a corresponding interface
-```java
-import de.poiu.coat.annotation.Coat;
-
-@Coat.Config
-public interface MyConfig {
-  @Coat.Param(key = "appName")
-  public String appName();
-
-  @Coat.Param(key = "listenPort", defaultValue = '8080')
-  public int listenPort();
-
-  @Coat.Param(key = "desription")
-  public Optional<String> description();
-}
-```
-
-{{< /column >}}
-
-{{< column >}}
-3. Then use the generated class
-```java
-final MyConfig config=
-  ImmutableMyConfig.from(
-    new File("/path/to/config.properties"));
-
-final String appName    = config.appName();
-final int    listenPort = config.listenPort();
-config.description().ifPresent(
-  …
-);
-
-
-
-
-```
-{{< /column >}}
-{{< /block >}}
-
--->
 
 ## Example project
 

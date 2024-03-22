@@ -7,9 +7,9 @@ Coat consists of two separate jars.
 
 - The annotation processor to generate the config classes. Only needed at
   compile time.
-- The runtime package containing the common base class for all generated
-  config classes and the default type converters. Needed at runtime.
-  
+- The runtime package containing the annotations and the default type
+  converters. Needed at runtime.
+
 To use Coat in a maven based project use the following maven coordinates:
 
 ```xml

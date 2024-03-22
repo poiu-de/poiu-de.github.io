@@ -21,11 +21,11 @@ be used as return types of the accessor methods in the annotated interface.
   * java.nio.file.Path
   * java.nio.charset.Charset
   * java.net.InetAddress
-  * java.security.MessageDigest
+  * java.net.URI
 
 For each supported type a converter class exists in the package
-`de.poiu.coat.convert`. Refer to the corresponding 
-[Java API docs](https://javadoc.io/doc/de.poiu.coat/coat-runtime/latest/de/poiu/coat/convert/package-summary.html)
+`de.poiu.coat.convert.converters`. Refer to the corresponding
+[Java API docs](https://javadoc.io/doc/de.poiu.coat/coat-runtime/latest/de/poiu/coat/convert/converters/package-summary.html)
 for details about the expected format of the input string.
 
 The following primitive types are also supported by default. But those are
@@ -70,30 +70,35 @@ supported.
 
 Coat allows registering custom types to be used in the annotated interface.
 
-Each generated config class provides a static method `registerConverter()`
-that can be used to register a converter for a specific type. To do this,
-the interface `de.poiu.coat.convert.Converter` must be implemented for that
-specific type and registered with the above mentioned method.
+A static method `Coat#registerGlobalConverter()` is provided to register
+a converter for a specific type. To do this, the interface
+`de.poiu.coat.convert.Converter` must be implemented for that specific type and
+registered with the above mentioned method.
 
-The `registerConverter()` method _must_ be called before an accessor method
-returning that type is called and before the `validate()` method is called.
+The `Coat#registerGlobalConverter()` method _must_ be called before creating
+a config object using such a type.
 
-The `registerConverter()` method can additionally be used for overriding
-the builtin converter for a type. For example if duration should be
+The `Coat#registerGlobalConverter()` method can additionally be used for overriding
+the builtin converter for a type. For example if durations should be
 specified in some other format than the default converter supports, write a
 custom converter for the `java.time.Duration` type and register it via
 
 ```java
-ImmutableMyConfig.registerConverter(Duration.class, new MyDurationConverter());
+Coat.registerGlobalConverter(new MyDurationConverter());
 ```
 
 As support for primitive types is directly implemented and not via
 Converter it is currently not possible to override the parsing of primitive
 types with a custom Converter. If different parsing of such types is
 necessary the corresponding object type must be used and a Converter for
-that type written (e. g. a `Converter<Integer>`).
+that type be written (e. g. a `Converter<Integer>`).
 
-Additionally to the above mentioned method of registering custom converters _at runtime_, they can also be specified declaratively on the corresponding annotations. See the description of these annotation parameters on the [type]({{< ref "/coat/user_guide/01_annotations#coat-config-converters" >}}) and on the [field]({{< ref "/coat/user_guide/01_annotations#coat-param-converter" >}}) level annotations for more information.
+Additionally to the above mentioned method of registering custom converters _at
+runtime_, they can also be specified declaratively on the corresponding
+annotations. See the description of these annotation parameters on the
+[type]({{< ref "/coat/user_guide/01_annotations#coat-config-converters" >}})
+and on the [field]({{< ref "/coat/user_guide/01_annotations#coat-param-converter" >}})
+level annotations for more information.
 
 ### Currently unsupported types
 
@@ -110,11 +115,21 @@ Since version 0.0.4 Coat supports Arrays and collections as return values of acc
 - java.util.List
 - java.util.Set
 
-Arrays are only supported for object types, not primitive types. Be aware that Arrays are by nature mutable. For that reason Lists should be preferred instead.
+Arrays are only supported for object types, not primitive types. Be aware that
+Arrays are by nature mutable. For that reason Lists should be preferred
+instead.
 
-By default the values of collection types are expected to be separated by whitespace. Whitespace _inside a single_ value can be used by prefixing each such whitespace character with a backslash. For example the value `one\ two three` would then be split into a collection with the two values `one two` and `three`.
+By default the values of collection types are expected to be separated by
+whitespace. Whitespace _inside a single_ value can be used by prefixing each
+such whitespace character with a backslash. For example the value `one\ two
+three` would then be split into a collection with the two values `one two` and
+`three`.
 
-Additionally, since version 1.0.0 a [CommaSeparatedListParser](https://javadoc.io/doc/de.poiu.coat/coat-runtime/latest/de/poiu/coat/convert/CommaSeparatedListParser.html) is provided for splitting around commas (ignoring any whitespace around the commas). If will not be used by default and must be explicitly declared as a custom ListParser.
+Additionally, since version 1.0.0
+a [CommaSeparatedListParser](https://javadoc.io/doc/de.poiu.coat/coat-runtime/latest/de/poiu/coat/convert/listparsers/CommaSeparatedListParser.html)
+is provided for splitting around commas (ignoring any whitespace around the
+commas). It will not be used by default and must be explicitly declared as
+a custom ListParser.
 
 Default values are supported for arrays and collections as well.
 
@@ -128,18 +143,34 @@ public AppConfig {
 
 ## Registering custom ListParser
 
-Coat allows for different formats than the default whitespace separated values by registering a custom ListParser.
-Each generated config class provides a static method `registerListParser()` to register a custom parser for such values. Additionally such a ListParser can be declared on the [@Coat.Config]({{< ref "/coat/user_guide/01_annotations#coat-config-listparser" >}}) annotation as well as on the [@Coat.Param]({{< ref "/coat/user_guide/01_annotations#coat-param-listparser" >}}) annotation.
+Coat allows for different formats than the default whitespace separated values
+by registering a custom ListParser. Each generated config class provides
+a static method `registerListParser()` to register a custom parser for such
+values. Additionally such a ListParser can be declared on the
+[@Coat.Config]({{< ref "/coat/user_guide/01_annotations#coat-config-listparser"
+>}}) annotation as well as on the [@Coat.Param]({{< ref
+"/coat/user_guide/01_annotations#coat-param-listparser" >}}) annotation.
 
 A custom ListParser must implement the `de.poiu.coat.convert.ListParser` interface.
 
 ## Optional values
 
-Config entries that are optional must be encapsulated in `java.util.Optional` or the more specialized variants `OptionalInt`, `OptionalLong` or `OptionalDouble` need to be used. All other config values are considered mandatory. Missing mandatory values will throw an exception at runtime.
+Config entries that are optional must be encapsulated in `java.util.Optional`
+or the more specialized variants `OptionalInt`, `OptionalLong` or
+`OptionalDouble` need to be used. All other config values are considered
+mandatory. Missing mandatory values will throw an exception at validation time.
 
-[Embedded types]({{< ref "/coat/user_guide/01_annotations#coatembedded" >}}) may be optional, too. They are considered present if at least one config entry with the corresponding key and separator was found. In that case all mandatory values of the embedded config must be present.
+[Embedded types]({{< ref "/coat/user_guide/01_annotations#coatembedded" >}})
+may be optional, too. They are considered present if at least one config entry
+with the corresponding key and separator was found. In that case all mandatory
+values of the embedded config must be present.
 
-Optional collections are not supported out of the box. The generation will succeed, but no converter will be found at runtime. Most of the time an optional collection does not make much sense and an empty collection should be returned in case no value is specified. Optional collections may be supported by providing a [custom converter]({{< ref "#registering-custom-types" >}}) for that specific collection, for example:
+Optional collections are not supported out of the box. The generation will
+succeed, but no converter will be found at runtime. Most of the time an
+optional collection does not make much sense and an empty collection should be
+returned in case no value is specified. Optional collections may be supported
+by providing a [custom converter]({{< ref "#registering-custom-types" >}}) for
+that specific collection, for example:
 
 ```java
 public class IntListConverter implements Converter<List<Integer>> {
