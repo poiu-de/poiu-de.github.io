@@ -36,3 +36,9 @@ To use Coat in a maven based project use the following maven coordinates:
       </plugins>
     </build>
 ```
+
+When using Coat in an application that uses Java modules add this to your `module-info.java`:
+
+```java
+requires de.poiu.coat.runtime;
+```
